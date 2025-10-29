@@ -5,5 +5,5 @@ Microservicio de autenticación y autorización (roles y permisos) para CourierS
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=JUAN-VILLOTA_login-service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=JUAN-VILLOTA_login-service)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=JUAN-VILLOTA_login-service&metric=bugs)](https://sonarcloud.io/summary/new_code?id=JUAN-VILLOTA_login-service)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=JUAN-VILLOTA_login-service&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=JUAN-VILLOTA_login-service)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=JUAN-VILLOTA_login-service&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=JUAN-VILLOTA_login-service)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=JUAN-VILLOTA_login-service&metric=coverage)](https://sonarcloud.io/summary/new_code?id=JUAN-VILLOTA_login-service)
+
