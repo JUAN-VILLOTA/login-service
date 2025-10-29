@@ -1,6 +1,6 @@
 package com.couriersync.login.login_service.Controller;
 
-import com.couriersync.login.login_service.Model.Role;
+import com.couriersync.login.login_service.Model.entity.Role;
 import com.couriersync.login.login_service.Service.RoleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +40,7 @@ public class RoleController {
     // ✅ PUT: actualizar un rol existente
     @PutMapping("/{id}")
     public Role updateRole(@PathVariable Long id, @RequestBody Role role) {
-        role.setId(id);
+        role.setIdRol(id);
         return roleService.saveRole(role);
     }
 

@@ -1,6 +1,6 @@
 package com.couriersync.login.login_service.Service;
 
-import com.couriersync.login.login_service.Model.Role;
+import com.couriersync.login.login_service.Model.entity.Role;
 import com.couriersync.login.login_service.Repository.RoleRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;

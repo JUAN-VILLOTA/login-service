@@ -1,6 +1,6 @@
 package com.couriersync.login.login_service.Service;
 
-import com.couriersync.login.login_service.Model.Permiso;
+import com.couriersync.login.login_service.Model.entity.Permiso;
 import com.couriersync.login.login_service.Repository.PermisoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;

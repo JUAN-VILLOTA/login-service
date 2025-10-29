@@ -1,6 +1,6 @@
 package com.couriersync.login.login_service.Controller;
 
-import com.couriersync.login.login_service.Model.Permiso;
+import com.couriersync.login.login_service.Model.entity.Permiso;
 import com.couriersync.login.login_service.Service.PermisoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +39,7 @@ public class PermisoController {
     // ✅ PUT: actualizar un permiso existente
     @PutMapping("/{id}")
     public Permiso updatePermiso(@PathVariable Long id, @RequestBody Permiso permiso) {
-        permiso.setId(id);
+        permiso.setIdPermiso(id);
         return permisoService.savePermiso(permiso);
     }
 
