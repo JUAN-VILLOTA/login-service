@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+# ✅ AGREGAR ESTA SECCIÓN
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+  statuses: write
+
 jobs:
   build-and-test:
     name: Build, Test and Quality Analysis
@@ -15,7 +22,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        fetch-depth: 0
 
     - name: Set up JDK 21
       uses: actions/setup-java@v4
@@ -36,7 +43,7 @@ jobs:
 
     - name: Run Tests and Generate Coverage
       run: mvn verify
-      continue-on-error: true  # No fallar si la cobertura es baja
+      continue-on-error: true
 
     - name: Upload JaCoCo Coverage Report
       uses: actions/upload-artifact@v4
@@ -99,16 +106,3 @@ jobs:
         files: target/surefire-reports/*.xml
         check_name: Test Results
         comment_mode: off
-
-  # Job de despliegue (opcional - descomentar cuando esté listo)
-  # deploy:
-  #   name: Deploy to Environment
-  #   runs-on: ubuntu-latest
-  #   needs: build-and-test
-  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-  #   
-  #   steps:
-  #   - name: Deploy to Production
-  #     run: |
-  #       echo "🚀 Desplegando a producción..."
-  #       # Agregar comandos de despliegue aquí
