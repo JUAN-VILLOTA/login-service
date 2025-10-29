@@ -41,8 +41,8 @@ jobs:
     - name: Build with Maven
       run: mvn clean compile -DskipTests
 
-    - name: Run Tests and Generate Coverage Report
-      run: mvn test
+    - name: Run Tests and Generate JaCoCo Report
+      run: mvn clean verify
 
     - name: Upload JaCoCo Coverage Report
       uses: actions/upload-artifact@v4
@@ -71,14 +71,13 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         if [ ! -z "$SONAR_TOKEN" ]; then
-          mvn -B verify sonar:sonar \
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=JUAN-VILLOTA_login-service \
             -Dsonar.organization=juan-villota \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
         else
-          echo "⚠️ SONAR_TOKEN no configurado. Ejecutando solo verify..."
-          mvn -B verify
+          echo "⚠️ SONAR_TOKEN no configurado. Saltando análisis de SonarCloud."
         fi
       continue-on-error: true
 
