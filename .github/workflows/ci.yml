@@ -61,20 +61,11 @@ jobs:
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
+    - name: SonarCloud Analysis
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.projectKey=JUAN-VILLOTA_login-service
-          -Dsonar.organization=juan-villota
-          -Dsonar.sources=src/main/java
-          -Dsonar.tests=src/test/java
-          -Dsonar.java.binaries=target/classes
-          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-          -Dsonar.junit.reportPaths=target/surefire-reports
+      run: mvn -B sonar:sonar
       continue-on-error: true
 
     - name: Comment Coverage on PR
