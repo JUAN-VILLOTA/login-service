@@ -37,8 +37,17 @@ public class LoginController {
      * Retorna información sobre la validez del token y datos del usuario.
      */
     @PostMapping("/validate")
-    public ResponseEntity<TokenValidationDTO> validateToken(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    public ResponseEntity<TokenValidationDTO> validateToken(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        
+        // Missing header
+        if (authHeader == null || authHeader.isBlank()) {
+            return ResponseEntity.badRequest()
+                    .body(new TokenValidationDTO(null, false, null, null));
+        }
+
+        // Wrong format
+        if (!authHeader.startsWith("Bearer ")) {
             return ResponseEntity.badRequest()
                     .body(new TokenValidationDTO(null, false, null, null));
         }
