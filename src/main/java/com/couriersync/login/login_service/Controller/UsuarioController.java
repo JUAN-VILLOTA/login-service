@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@CrossOrigin(origins = "*") // permite peticiones desde cualquier origen (útil durante desarrollo)
+// CORS configurado globalmente en SecurityConfig - No necesario aquí
 public class UsuarioController {
 
     private final UsuarioService usuarioService;

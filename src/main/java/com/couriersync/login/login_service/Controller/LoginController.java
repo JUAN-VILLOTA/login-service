@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/login")
-@CrossOrigin(origins = "*")
+// CORS configurado globalmente en SecurityConfig - No necesario aquí
 public class LoginController {
 
     private final LoginService loginService;

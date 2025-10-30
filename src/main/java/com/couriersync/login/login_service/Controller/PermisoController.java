@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/permisos")
-@CrossOrigin(origins = "*")
+// CORS configurado globalmente en SecurityConfig - No necesario aquí
 public class PermisoController {
 
     private final PermisoService permisoService;

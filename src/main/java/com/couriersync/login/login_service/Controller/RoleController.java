@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/roles")
-@CrossOrigin(origins = "*") // permite peticiones desde cualquier origen (útil durante desarrollo)
+// CORS configurado globalmente en SecurityConfig - No necesario aquí
 public class RoleController {
 
     private final RoleService roleService;
