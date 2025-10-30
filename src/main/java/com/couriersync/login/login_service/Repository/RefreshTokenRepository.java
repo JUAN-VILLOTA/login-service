@@ -20,6 +20,10 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     @Query("DELETE FROM RefreshToken rt WHERE rt.usuario = :usuario")
     void deleteByUsuario(Usuario usuario);
     
+    /**
+     * Revoca todos los refresh tokens de un usuario.
+     * Spring Data JPA maneja automáticamente la transacción con @Modifying.
+     */
     @Modifying
     @Query("UPDATE RefreshToken rt SET rt.revoked = true WHERE rt.usuario = :usuario")
     void revokeAllByUsuario(Usuario usuario);

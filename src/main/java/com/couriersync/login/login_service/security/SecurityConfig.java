@@ -28,13 +28,27 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    /**
+     * Configura la cadena de filtros de seguridad para la aplicación.
+     * 
+     * CSRF está deshabilitado intencionalmente porque:
+     * 1. Esta es una API REST stateless que usa JWT para autenticación
+     * 2. No maneja sesiones de usuario (SessionCreationPolicy.STATELESS)
+     * 3. Los tokens JWT no son vulnerables a CSRF ya que se envían en headers, no en cookies
+     * 4. Los clientes de esta API son aplicaciones móviles/web que manejan tokens explícitamente
+     * 
+     * Para APIs REST con JWT, CSRF protection no es necesaria y puede causar problemas.
+     * Ver: https://spring.io/blog/2013/08/21/spring-security-3-2-0-rc1-highlights-csrf-protection/
+     */
     @Bean
+    @SuppressWarnings("java:S4502") // CSRF protection is intentionally disabled for stateless JWT API
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             // ✅ Habilitar CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
-            // 🚫 Desactivar CSRF (para APIs REST)
+            // 🚫 Desactivar CSRF - Seguro para APIs REST stateless con JWT
+            // No usamos cookies de sesión, por lo tanto CSRF no aplica
             .csrf(csrf -> csrf.disable())
 
             // ⚙️ Configurar reglas de autorización

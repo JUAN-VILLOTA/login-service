@@ -74,11 +74,19 @@ public class RefreshTokenService {
                 });
     }
 
+    /**
+     * Revoca todos los refresh tokens de un usuario.
+     * Este método necesita @Transactional porque llama a un método @Modifying del repository.
+     */
     @Transactional
     public void revokeUserTokens(Usuario usuario) {
         refreshTokenRepository.revokeAllByUsuario(usuario);
     }
 
+    /**
+     * Elimina tokens expirados de la base de datos.
+     * Operación de limpieza para mantener la tabla optimizada.
+     */
     @Transactional
     public int deleteExpiredTokens() {
         // Eliminar tokens expirados y revocados
