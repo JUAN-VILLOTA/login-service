@@ -3,7 +3,10 @@ package com.couriersync.login.login_service.Controller;
 import com.couriersync.login.login_service.Model.dto.UsuarioRequestDTO;
 import com.couriersync.login.login_service.Model.entity.Role;
 import com.couriersync.login.login_service.Model.entity.Usuario;
+import com.couriersync.login.login_service.Repository.UsuarioRepository;
 import com.couriersync.login.login_service.Service.UsuarioService;
+import com.couriersync.login.login_service.security.JwtAuthenticationFilter;
+import com.couriersync.login.login_service.security.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +39,15 @@ class UsuarioControllerTest {
 
     @MockBean
     private UsuarioService usuarioService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    private UsuarioRepository usuarioRepository;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private Usuario testUsuario;
     private Role testRole;
