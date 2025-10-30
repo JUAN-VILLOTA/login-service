@@ -7,6 +7,7 @@ import com.couriersync.login.login_service.Repository.UsuarioRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -28,6 +29,12 @@ public class RefreshTokenService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    /**
+     * Crea un nuevo refresh token para un usuario.
+     * Revoca automáticamente tokens anteriores del mismo usuario.
+     * @Transactional asegura que la revocación y creación del token sean atómicas.
+     */
+    @Transactional
     public RefreshToken createRefreshToken(Long usuarioId, HttpServletRequest request) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -76,9 +83,10 @@ public class RefreshTokenService {
 
     /**
      * Revoca todos los refresh tokens de un usuario.
-     * Este método necesita @Transactional porque llama a un método @Modifying del repository.
+     * Este método usa MANDATORY porque DEBE ejecutarse dentro de una transacción existente.
+     * Es llamado desde createRefreshToken que ya tiene @Transactional.
      */
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public void revokeUserTokens(Usuario usuario) {
         refreshTokenRepository.revokeAllByUsuario(usuario);
     }
