@@ -70,6 +70,11 @@ jobs:
         args: >
           -Dsonar.projectKey=JUAN-VILLOTA_login-service
           -Dsonar.organization=juan-villota
+          -Dsonar.sources=src/main/java
+          -Dsonar.tests=src/test/java
+          -Dsonar.java.binaries=target/classes
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+          -Dsonar.junit.reportPaths=target/surefire-reports
       continue-on-error: true
 
     - name: Comment Coverage on PR
