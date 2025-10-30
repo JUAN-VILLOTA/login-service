@@ -3,6 +3,7 @@ package com.couriersync.login.login_service.Service;
 import com.couriersync.login.login_service.Model.dto.LoginRequestDTO;
 import com.couriersync.login.login_service.Model.dto.LoginResponseDTO;
 import com.couriersync.login.login_service.Model.entity.Permiso;
+import com.couriersync.login.login_service.Model.entity.RefreshToken;
 import com.couriersync.login.login_service.Model.entity.Role;
 import com.couriersync.login.login_service.Model.entity.Usuario;
 import com.couriersync.login.login_service.Repository.PermisoRepository;
@@ -10,6 +11,7 @@ import com.couriersync.login.login_service.Repository.RolePermisoRepository;
 import com.couriersync.login.login_service.Repository.RoleRepository;
 import com.couriersync.login.login_service.Repository.UsuarioRepository;
 import com.couriersync.login.login_service.security.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -48,12 +51,19 @@ class LoginServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private RefreshTokenService refreshTokenService;
+
+    @Mock
+    private HttpServletRequest httpServletRequest;
+
     @InjectMocks
     private LoginService loginService;
 
     private Usuario testUsuario;
     private Role testRole;
     private Permiso testPermiso;
+    private RefreshToken refreshToken;
 
     @BeforeEach
     void setUp() {
@@ -70,6 +80,11 @@ class LoginServiceTest {
         testPermiso = new Permiso();
         testPermiso.setIdPermiso(1L);
         testPermiso.setNombre("CREAR_USUARIO");
+
+        refreshToken = new RefreshToken();
+        refreshToken.setToken("test-refresh-token");
+        refreshToken.setUsuario(testUsuario);
+        refreshToken.setExpiryDate(Instant.now().plusSeconds(7 * 24 * 60 * 60));
     }
 
     @Test
@@ -93,13 +108,15 @@ class LoginServiceTest {
         when(permisoRepository.findById(2L)).thenReturn(Optional.of(permiso2));
         
         when(jwtUtil.generateToken(anyString(), anyString(), any())).thenReturn("fake-jwt-token");
+        when(refreshTokenService.createRefreshToken(any(), any())).thenReturn(refreshToken);
 
         // Act
-        LoginResponseDTO response = loginService.login(request);
+        LoginResponseDTO response = loginService.login(request, httpServletRequest);
 
         // Assert
         assertNotNull(response);
         assertEquals("fake-jwt-token", response.getToken());
+        assertEquals("test-refresh-token", response.getRefreshToken());
         assertEquals("ADMIN", response.getRole());
         assertEquals(2, response.getPermisos().size());
         assertEquals("Inicio de sesión exitoso", response.getMessage());
@@ -107,6 +124,7 @@ class LoginServiceTest {
         verify(usuarioRepository).findByUsername("admin");
         verify(passwordEncoder).matches("admin123", testUsuario.getPassword());
         verify(jwtUtil).generateToken(anyString(), anyString(), any());
+        verify(refreshTokenService).createRefreshToken(any(), any());
     }
 
     @Test
@@ -120,7 +138,7 @@ class LoginServiceTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            loginService.login(request);
+            loginService.login(request, httpServletRequest);
         });
 
         assertEquals("Credenciales inválidas", exception.getMessage());
@@ -140,7 +158,7 @@ class LoginServiceTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            loginService.login(request);
+            loginService.login(request, httpServletRequest);
         });
 
         assertEquals("Credenciales inválidas", exception.getMessage());
@@ -160,9 +178,10 @@ class LoginServiceTest {
         when(passwordEncoder.matches("admin123", testUsuario.getPassword())).thenReturn(true);
         when(rolePermisoRepository.findPermisosByRolId(1L)).thenReturn(Arrays.asList());
         when(jwtUtil.generateToken(anyString(), anyString(), any())).thenReturn("fake-jwt-token");
+        when(refreshTokenService.createRefreshToken(any(), any())).thenReturn(refreshToken);
 
         // Act
-        LoginResponseDTO response = loginService.login(request);
+        LoginResponseDTO response = loginService.login(request, httpServletRequest);
 
         // Assert
         assertNotNull(response);

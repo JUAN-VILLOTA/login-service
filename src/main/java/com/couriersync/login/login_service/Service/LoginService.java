@@ -1,5 +1,6 @@
 package com.couriersync.login.login_service.Service;
 
+import com.couriersync.login.login_service.Model.entity.RefreshToken;
 import com.couriersync.login.login_service.Repository.RoleRepository;
 import com.couriersync.login.login_service.Repository.PermisoRepository;
 import com.couriersync.login.login_service.Repository.RolePermisoRepository;
@@ -10,6 +11,7 @@ import com.couriersync.login.login_service.Model.entity.Permiso;
 import com.couriersync.login.login_service.Model.entity.Role;
 import com.couriersync.login.login_service.Model.entity.Usuario;
 import com.couriersync.login.login_service.security.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,10 @@ public class LoginService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public LoginResponseDTO login(LoginRequestDTO request) {
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
+    public LoginResponseDTO login(LoginRequestDTO request, HttpServletRequest httpRequest) {
 
         // Buscar usuario por username
         Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
@@ -63,7 +68,10 @@ public class LoginService {
         // Generar token JWT
         String token = jwtUtil.generateToken(usuario.getUsername(), role.getNombre(), permisos);
 
-        return new LoginResponseDTO(token, role.getNombre(), permisos,
+        // Generar refresh token
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getIdUsuario(), httpRequest);
+
+        return new LoginResponseDTO(token, refreshToken.getToken(), role.getNombre(), permisos,
                 "Inicio de sesión exitoso");
     }
 }
