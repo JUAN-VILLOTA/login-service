@@ -125,8 +125,6 @@
                    <goal>prepare-agent</goal>
                  </goals>
                </execution>
-
-               <!-- Generar reporte al final de las pruebas -->
                <execution>
                  <id>report</id>
                  <phase>verify</phase>

@@ -1,0 +1,43 @@
+# Archivos de Git
+.git
+.gitignore
+.gitattributes
+.github
+
+# Archivos de IDE
+.vscode
+.idea
+*.iml
+.settings
+.project
+.classpath
+
+# Archivos de build (se generan en el contenedor)
+target/
+!target/*.jar
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*~
+
+# Maven wrapper (opcional, ya está en la imagen base)
+.mvn/wrapper/maven-wrapper.jar
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Documentación que no se necesita en la imagen
+README.md
+CHANGELOG.md
+LICENSE
+
+# Archivos de configuración local
+application-local.properties
+application-dev.properties

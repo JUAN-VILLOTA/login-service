@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: login-service-db
+    environment:
+      POSTGRES_DB: login_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - login-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Aplicación Spring Boot
+  login-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: login-service-app
+    environment:
+      # Configuración de base de datos
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/login_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres123
+      
+      # Configuración de JPA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "false"
+      
+      # Configuración de JWT (puedes cambiar el secret)
+      JWT_SECRET: tu-secret-key-super-segura-cambiar-en-produccion
+      JWT_EXPIRATION: 900000
+      REFRESH_TOKEN_EXPIRATION: 604800000
+      
+      # Profile activo
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - login-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  login-network:
+    driver: bridge
